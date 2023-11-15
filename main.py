@@ -92,12 +92,12 @@ llamaCPP = LlamaCPP(
 # chatgpt = OpenAI(temperature=0, model="gpt-3.5-turbo")
 
 # Need a local embed model
-service_context = ServiceContext.from_defaults(llm=llamaCPP, chunk_size=1024)
+# service_context = ServiceContext.from_defaults(llm=llamaCPP, chunk_size=1024)
 
 # default mode of building the index
-response_synthesizer = get_response_synthesizer(
-    response_mode="tree_summarize", use_async=True
-)
+# response_synthesizer = get_response_synthesizer(
+#     response_mode="tree_summarize", use_async=True
+# )
 # doc_summary_index = DocumentSummaryIndex.from_documents(
 #     city_docs,
 #     service_context=service_context,
@@ -115,3 +115,12 @@ from llama_index import StorageContext
 # rebuild storage context
 storage_context = StorageContext.from_defaults(persist_dir="index")
 doc_summary_index = load_index_from_storage(storage_context)
+
+query_engine = doc_summary_index.as_query_engine(
+    response_mode="tree_summarize", use_async=True
+)
+
+response = query_engine.query("What are the sports teams in Toronto?")
+
+print(response)
+
