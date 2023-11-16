@@ -117,11 +117,11 @@ storage_context = StorageContext.from_defaults(persist_dir="index")
 doc_summary_index = load_index_from_storage(storage_context)
 
 from llama_index.indices.document_summary import (
-    DocumentSummaryIndexLLMRetriever
+    DocumentSummaryIndexEmbeddingRetriever,
 )
 
-retriever = DocumentSummaryIndexLLMRetriever(
-    doc_summary_index
+retriever = DocumentSummaryIndexEmbeddingRetriever(
+    doc_summary_index,
 )
 
 # use retriever as part of a query engine
@@ -139,7 +139,4 @@ query_engine = RetrieverQueryEngine(
 # query
 response = query_engine.query("What are the sports teams in Toronto?")
 print(response)
-
-
-
 
