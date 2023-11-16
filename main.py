@@ -116,11 +116,30 @@ from llama_index import StorageContext
 storage_context = StorageContext.from_defaults(persist_dir="index")
 doc_summary_index = load_index_from_storage(storage_context)
 
-query_engine = doc_summary_index.as_query_engine(
-    response_mode="tree_summarize", use_async=True
+from llama_index.indices.document_summary import (
+    DocumentSummaryIndexLLMRetriever
 )
 
-response = query_engine.query("What are the sports teams in Toronto?")
+retriever = DocumentSummaryIndexLLMRetriever(
+    doc_summary_index
+)
 
+# use retriever as part of a query engine
+from llama_index.query_engine import RetrieverQueryEngine
+
+# configure response synthesizer
+response_synthesizer = get_response_synthesizer(response_mode="tree_summarize")
+
+# assemble query engine
+query_engine = RetrieverQueryEngine(
+    retriever=retriever,
+    response_synthesizer=response_synthesizer,
+)
+
+# query
+response = query_engine.query("What are the sports teams in Toronto?")
 print(response)
+
+
+
 
